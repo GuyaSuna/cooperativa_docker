@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Generar la estructura de la BD
-RUN npx prisma generate
+#RUN npx prisma generate
 
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
