@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend.Dockerfile
+    container_name: cooperativa_nextjs_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    environment:
+      - DATABASE_URL=mysql://myuser:mypassword@mysql:3306/mydb
+    networks:
+      - cooperativa-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: cooperativa_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mydb}
+      MYSQL_USER: ${MYSQL_USER:-myuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mypassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cooperativa-network
+
+volumes:
+  mysql_data:
+
+networks:
+  cooperativa-network:
+    driver: bridge
